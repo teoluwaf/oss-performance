@@ -172,8 +172,12 @@ final class PerfRunner {
     $nginx->clearAccessLog();
 
     if ($options->waitAfterWarmup) {
-      self::PrintProgress('Finished warmup. Press Enter to continue the benchmark');
-      fread(STDIN, 1);
+      self::PrintProgress('Ready to run benchmark. Checking for proceed signal...');
+      $proceedFile = ".proceed";
+      while (!file_exists($proceedFile)) {
+	      self::PrintProgress("Waiting for proceed signal...");
+	      sleep(1);
+      }
     }
 
     if ($options->scriptAfterWarmup !== null) {
